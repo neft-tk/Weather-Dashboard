@@ -42,7 +42,7 @@ var city = searchList[0];
 function saveCityName(event) {
     event.preventDefault();
     let search = {
-        city: searchBar.val()
+        city: searchBar.val().trim()
     } 
     
     searchList.unshift(search);
@@ -50,7 +50,23 @@ function saveCityName(event) {
 
     localStorage.setItem("User Searches", JSON.stringify(searchList));
 
+    var button = document.createElement("button");
+ 
+    button.textContent = search.city;
+    button.setAttribute("class", "newButton btn btn-outline-secondary");    
+       
+    button.setAttribute("type", "button");
+    searchHistory.append(button);
+
 };
+
+
+// TODO: function that lets the search history buttons search like a new term
+function searchHistoryList(event) {
+    event.preventDefault();
+}
+
+
 
 
 searchButton.on('click', saveCityName);
