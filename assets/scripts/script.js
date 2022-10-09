@@ -1,11 +1,13 @@
 var APIKey = "cb66a065187c471ce473ef1bec816d74";
-var queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
+let queryURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=cb66a065187c471ce473ef1bec816d74";
 
 var searchBar = $('#searchBar');
 var searchButton = $('.searchButton');
 var searchHistory = $('#searchHistory');
 let searchList = [];
-var city = searchList[0];
+var city = searchBar.val();
+var lon = 0;
+var lat = 0;
 
 
 
@@ -16,29 +18,45 @@ var city = searchList[0];
 // first datecard should be bigger than the others and include the NAME
 // appends to the page
 
+function getGeoCode(event) {
+
+
+
+    requestGeoCode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=cb66a065187c471ce473ef1bec816d74";
+
+
+    fetch(requestGeoCode)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        console.log(data);
+
+  })};
+
+
+
 // function getApi() {
-  
-//     fetch(queryUrl)
+
+
+//     requestUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=cb66a065187c471ce473ef1bec816d74";
+
+
+//     fetch(requestUrl)
 //       .then(function (response) {
 //         return response.json();
 //       })
 //       .then(function (data) {
-//         for (var i = 0; i < data.length; i++) {
-//           var listItem = document.createElement('li');
-//           listItem.textContent = data[i].city;
-//           searchHistory.appendChild(listItem);
-//         }
-//       });
-//   }
+//         console.log(data);
 
-// TODO: 
-// display locally stored names up to a certain amount?
-// each name that appears on the page should be a button
-// when that button is pressed, it should access the name it was given and plug that into the weather function 
+//   })};
+
+
 
 
 // creates an object based on what the user puts into the search bar
 // adds that object to our global array so we can make search buttons based on our history
+// creates a button with the city's name in a search history list
 function saveCityName(event) {
     event.preventDefault();
     let search = {
@@ -58,6 +76,35 @@ function saveCityName(event) {
     button.setAttribute("type", "button");
     searchHistory.append(button);
 
+
+    function getGeoCode() {
+
+
+
+        requestGeoCode = "http://api.openweathermap.org/geo/1.0/direct?q=" + search.city + "&limit=1&appid=cb66a065187c471ce473ef1bec816d74";
+    
+    
+        fetch(requestGeoCode)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            console.log(data);
+
+
+            var longitude = data[0].lon;
+            var latitude = data[0].lat;
+            
+            var lat = lat + latitude;
+            var lon = lon + longitude;
+            
+            console.log(lon);
+            console.log(lat);
+            return lon, lat;
+      })};
+
+      getGeoCode();
+    // getApi();
 };
 
 
