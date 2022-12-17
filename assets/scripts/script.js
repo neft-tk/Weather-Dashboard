@@ -21,7 +21,7 @@ let title
 // Plugs them into our actual weather API
 function getWeather(lat, lon) {
 
-    requestUrl = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=cb66a065187c471ce473ef1bec816d74";
+    requestUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKey}`;
 
 
     fetch(requestUrl)
@@ -30,31 +30,44 @@ function getWeather(lat, lon) {
         })
         .then(function (data) {
             console.log(data);
-
-            let card = document.querySelectorAll('.card');
-            currentWeather.remove(card);
+            currentWeather.remove("search1")
 
 
             let div = document.createElement('div');
-            let h2 = document.createElement("h2");
-            
+            let h1 = document.createElement("h2");
+            let p = document.createElement("p");
+            let p2 = document.createElement("p");
+            let p3 = document.createElement("p");
+
+            let tempCityName = data.name;
 
             div.setAttribute("class", "card");
-        
-            let tempCityName = data.name;
-            console.log(tempCityName);
-            h2.textContent = tempCityName;  
-                  
-           
+            div.setAttribute("id", "search1");
             currentWeather.append(div);
-            div.append(h2);
+        
+            h1.textContent = tempCityName + " " + data.weather[0].description   
+            div.append(h1);
+            
+            let tempCityWind = data.wind.speed;
+            p.textContent = "Wind Speed: " + tempCityWind + " MPH"
+            div.append(p)
+
+            let rawData = data.main.temp;
+            let tempCityWeather = Math.floor(((1.8 * (rawData - 273)) + 32)  * 100) / 100
+            p2.textContent = "Weather: " + tempCityWeather + " Degrees"               
+            div.append(p2)
+
+            let tempCityHumidity = data.main.humidity;
+            p3.textContent = "Humidity: " + tempCityHumidity + "%"
+            div.append(p3)
+           
         })
 };
 
 // grabs the latitude and longitude coordinates for the city 
 // returns the two coordinates into our other API function
 function getGeoCode(city) {
-    requestGeoCode = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=cb66a065187c471ce473ef1bec816d74";
+    requestGeoCode = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=cb66a065187c471ce473ef1bec816d74";
 
     fetch(requestGeoCode)
         .then(function (response) {

@@ -3,7 +3,7 @@ Weather dashboard that displays 6 total days of weather (with details) for a sel
 
 To the side there is a search history list which displays previous searches as buttons that will run the original weather function with that button's stored value.
 
-I was unable to complete the functions that would display weather data at this time.
+I was unable to complete the functions that would display 5 future dates of weather data at this time.
 
 https://neft-tk.github.io/Weather-Dashboard/
 
