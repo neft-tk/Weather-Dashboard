@@ -30,8 +30,6 @@ function getWeather(lat, lon) {
         })
         .then(function (data) {
             console.log(data);
-            currentWeather.remove("search1")
-
 
             let div = document.createElement('div');
             let h1 = document.createElement("h2");
