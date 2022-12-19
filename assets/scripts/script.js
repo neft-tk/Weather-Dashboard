@@ -6,10 +6,16 @@ var searchButton = $('.searchButton');
 var searchHistory = $('#searchHistory');
 let currentWeather = $('#today');
 let searchList = [];
-let div
-let title
 
 
+// function createPage() {
+
+//     let div = document.createElement('div');
+//     let h1 = document.createElement("h2");
+//     let p = document.createElement("p");
+//     let p2 = document.createElement("p");
+//     let p3 = document.createElement("p");
+// }
 
 // TODO: Weather days function
 // grab 6 days worth of weather
@@ -31,6 +37,11 @@ function getWeather(lat, lon) {
         .then(function (data) {
             console.log(data);
 
+            let divData = document.getElementById('search1');
+                if(divData !== null) {
+                    divData.remove();
+                }
+
             let div = document.createElement('div');
             let h1 = document.createElement("h2");
             let p = document.createElement("p");
@@ -49,10 +60,11 @@ function getWeather(lat, lon) {
             let tempCityWind = data.wind.speed;
             p.textContent = "Wind Speed: " + tempCityWind + " MPH"
             div.append(p)
+            
 
             let rawData = data.main.temp;
             let tempCityWeather = Math.floor(((1.8 * (rawData - 273)) + 32)  * 100) / 100
-            p2.textContent = "Weather: " + tempCityWeather + " Degrees"               
+            p2.textContent = "Temperature: " + tempCityWeather + " Degrees"               
             div.append(p2)
 
             let tempCityHumidity = data.main.humidity;
@@ -116,6 +128,14 @@ function saveCityName(event) {
 
     getGeoCode(search.city);
 };
+
+// function clearBox()
+// {
+//     let div = document.getElementById('search1');
+//     if(div !== null) {
+//         div.remove();
+//     }
+// }
 
 
 
