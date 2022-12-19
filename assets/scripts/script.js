@@ -47,15 +47,21 @@ function getWeather(lat, lon) {
             let p = document.createElement("p");
             let p2 = document.createElement("p");
             let p3 = document.createElement("p");
+            let img = document.createElement("img");
 
             let tempCityName = data.name;
+            
+            img.setAttribute("src", `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`)
+            img.setAttribute("style", "max-height: 5%")
+            img.setAttribute("style", "max-width: 5%")
 
             div.setAttribute("class", "card");
             div.setAttribute("id", "search1");
             currentWeather.append(div);
         
-            h1.textContent = tempCityName + " " + data.weather[0].description   
+            h1.textContent = tempCityName + " | " + moment().format("MMM Do YY");   
             div.append(h1);
+            h1.append(img)
             
             let tempCityWind = data.wind.speed;
             p.textContent = "Wind Speed: " + tempCityWind + " MPH"
@@ -129,14 +135,25 @@ function saveCityName(event) {
     getGeoCode(search.city);
 };
 
-// function clearBox()
-// {
-//     let div = document.getElementById('search1');
-//     if(div !== null) {
-//         div.remove();
-//     }
-// }
+function pageStartUp() {
+    let savedSearches = JSON.parse(localStorage.getItem("User Searches"))
+    console.log(savedSearches);
 
+    savedSearches.map((search) => {
+        var button = document.createElement("button");
+    
+        button.textContent = search.city;
+        button.setAttribute("class", "newButton btn btn-outline-secondary");
+    
+        button.setAttribute("type", "button");
+        button.addEventListener("click", function (event) {
+            let pressed = event.target;
+            let newCityName = pressed.innerText;
+            getGeoCode(newCityName);
+        });
+        searchHistory.append(button);
+    })    
+}
 
 
 // TODO: function that lets the search history buttons search like a new term
@@ -145,6 +162,6 @@ function searchHistoryList(event) {
 }
 
 
-
+pageStartUp();
 
 searchButton.on('click', saveCityName);
