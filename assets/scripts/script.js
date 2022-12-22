@@ -139,7 +139,9 @@ function pageStartUp() {
   let savedSearches = JSON.parse(localStorage.getItem("User Searches"));
   console.log(savedSearches);
 
-  if (savedSearches !== null) {
+  if (savedSearches === null) {
+    localStorage.setItem("User Searches", "")
+  } else {
     savedSearches.map((search) => {
       var button = document.createElement("button");
 
