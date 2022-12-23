@@ -5,6 +5,7 @@ var searchBar = $("#searchBar");
 var searchButton = $(".searchButton");
 var searchHistory = $("#searchHistory");
 let currentWeather = $("#today");
+let futureWeather = $("#forecast");
 let searchList = [];
 
 // function createPage() {
@@ -16,6 +17,85 @@ let searchList = [];
 //     let p3 = document.createElement("p");
 // }
 
+
+function buildCard(data) {
+  let div = document.createElement("div");
+  let h1 = document.createElement("h2");
+  let p = document.createElement("p");
+  let p2 = document.createElement("p");
+  let p3 = document.createElement("p");
+  let img = document.createElement("img");
+
+  let tempCityName = data.name;
+
+  img.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`
+  );
+  img.setAttribute("style", "max-height: 5%");
+  img.setAttribute("style", "max-width: 5%");
+
+  div.setAttribute("class", "card");
+  div.setAttribute("id", "search1");
+  currentWeather.append(div);
+
+  h1.textContent = tempCityName + " | " + moment().format("MMM Do YY");
+  div.append(h1);
+  h1.append(img);
+
+  let tempCityWind = data.wind.speed;
+  p.textContent = "Wind Speed: " + tempCityWind + " MPH";
+  div.append(p);
+
+  let rawData = data.main.temp;
+  let tempCityWeather =
+    Math.floor((1.8 * (rawData - 273) + 32) * 100) / 100;
+  p2.textContent = "Temperature: " + tempCityWeather + " Degrees";
+  div.append(p2);
+
+  let tempCityHumidity = data.main.humidity;
+  p3.textContent = "Humidity: " + tempCityHumidity + "%";
+  div.append(p3);
+}
+
+function buildFutureCard(data, count) {
+  let div = document.createElement("div");
+  let h1 = document.createElement("h2");
+  let p = document.createElement("p");
+  let p2 = document.createElement("p");
+  let p3 = document.createElement("p");
+  let img = document.createElement("img");
+
+
+  img.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`
+  );
+  img.setAttribute("style", "max-height: 5%");
+  img.setAttribute("style", "max-width: 5%");
+
+  div.setAttribute("class", "card");
+  div.setAttribute("id", "search1");
+  futureWeather.append(div);
+
+  h1.textContent = moment().add(count, 'days');
+  div.append(h1);
+  h1.append(img);
+
+  let tempCityWind = data.wind.speed;
+  p.textContent = "Wind Speed: " + tempCityWind + " MPH";
+  div.append(p);
+
+  let rawData = data.main.temp;
+  let tempCityWeather =
+    Math.floor((1.8 * (rawData - 273) + 32) * 100) / 100;
+  p2.textContent = "Temperature: " + tempCityWeather + " Degrees";
+  div.append(p2);
+
+  let tempCityHumidity = data.main.humidity;
+  p3.textContent = "Humidity: " + tempCityHumidity + "%";
+  div.append(p3);
+}
 // TODO: Weather days function
 // grab 6 days worth of weather
 // include date, icon for the type of weather, temperature, wind speeds, humidity
@@ -26,6 +106,8 @@ let searchList = [];
 // Plugs them into our actual weather API
 function getWeather(lat, lon) {
   requestUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKey}`;
+
+  forecastURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}`;
 
   fetch(requestUrl)
     .then(function (response) {
@@ -38,44 +120,25 @@ function getWeather(lat, lon) {
       if (divData !== null) {
         divData.remove();
       }
+      
+      buildCard(data)
 
-      let div = document.createElement("div");
-      let h1 = document.createElement("h2");
-      let p = document.createElement("p");
-      let p2 = document.createElement("p");
-      let p3 = document.createElement("p");
-      let img = document.createElement("img");
+      fetch(forecastURL)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (forecastData) {
+        console.log(forecastData.list);
+        let count = 0;
+        let slicedData = forecastData.list.slice(0,5);
 
-      let tempCityName = data.name;
-
-      img.setAttribute(
-        "src",
-        `https://openweathermap.org/img/wn/${data.weather[0].icon}.png`
-      );
-      img.setAttribute("style", "max-height: 5%");
-      img.setAttribute("style", "max-width: 5%");
-
-      div.setAttribute("class", "card");
-      div.setAttribute("id", "search1");
-      currentWeather.append(div);
-
-      h1.textContent = tempCityName + " | " + moment().format("MMM Do YY");
-      div.append(h1);
-      h1.append(img);
-
-      let tempCityWind = data.wind.speed;
-      p.textContent = "Wind Speed: " + tempCityWind + " MPH";
-      div.append(p);
-
-      let rawData = data.main.temp;
-      let tempCityWeather =
-        Math.floor((1.8 * (rawData - 273) + 32) * 100) / 100;
-      p2.textContent = "Temperature: " + tempCityWeather + " Degrees";
-      div.append(p2);
-
-      let tempCityHumidity = data.main.humidity;
-      p3.textContent = "Humidity: " + tempCityHumidity + "%";
-      div.append(p3);
+        let futureCards = slicedData.map(day=> {
+          count++
+          buildFutureCard(day, count)
+        })
+        
+        
+      })
     });
 }
 
